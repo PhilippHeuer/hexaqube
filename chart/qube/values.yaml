@@ -86,12 +86,15 @@ redpanda:
     # ingress
     ingress:
       enabled: false
-      annotations: { }
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: lets-encrypt
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
       hosts:
         - host: redpanda.cluster.local
           paths:
             - path: /
-              pathType: ImplementationSpecific
+              pathType: Prefix
 
     # resources
     resources:

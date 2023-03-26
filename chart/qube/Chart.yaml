@@ -1,0 +1,24 @@
+apiVersion: v2
+name: qube
+description: A Helm chart for HexaQube
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+
+# This is a list of dependencies required for hexaqube to operate.
+dependencies:
+  # postgres database
+  - name: postgresql
+    version: "12.2.6"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  # redpanda broker and console (see https://artifacthub.io/packages/helm/redpanda-data/redpanda)
+  - name: redpanda
+    version: "3.0.6"
+    repository: "https://charts.redpanda.com"
+    condition: redpanda.enabled
+  # qdrant vector database
+  - name: qdrant
+    version: "0.2.8"
+    repository: "https://qdrant.github.io/qdrant-helm"
+    condition: qdrant.enabled

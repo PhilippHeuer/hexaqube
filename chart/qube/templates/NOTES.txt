@@ -1,0 +1,12 @@
+HexaQube {{ .Values.hexaqube.image.tag }} has been deployed!
+
+Deployed Dependencies:
+{{- if .Values.postgresql.enabled }}
+ - postgresql {{ .Values.postgresql.image.tag }} (database)
+{{- end }}
+{{- if .Values.redpanda.enabled }}
+ - redpanda {{ .Values.redpanda.image.tag }} (message broker)
+{{- end }}
+{{- if .Values.qdrant.enabled }}
+ - qdrant {{ .Values.qdrant.image.tag }} (vector database)
+{{- end }}

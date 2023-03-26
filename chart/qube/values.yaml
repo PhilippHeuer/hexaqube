@@ -1,0 +1,116 @@
+# Default values for qube.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  postgresql:
+    auth:
+      postgresPassword: "secret-root-password"
+      username: "hexaqube"
+      password: "secret-user-password"
+      database: "hexaqube"
+
+hexaqube:
+  # image
+  image:
+    registry: docker.io
+    repository: hexaqube/hexaqube
+    tag: v0.0.0
+
+# SubChart: postgresql
+postgresql:
+  enabled: true
+
+  # name
+  fullnameOverride: "postgresql"
+
+  # image
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: 15.2.0-debian-11-r14
+
+  # persistence
+  persistence:
+    enabled: true
+    size: 10Gi
+
+  # no replication required as of now
+  architecture: standalone
+
+# SubChart: redpanda
+redpanda:
+  enabled: true
+
+  # name
+  fullnameOverride: "redpanda"
+
+  # image
+  image:
+    registry: docker.io
+    repository: redpandadata/redpanda
+    tag: v22.3.15
+
+  # redpanda statefulset
+  statefulset:
+    replicas: 1
+
+  # persistence
+  storage:
+    hostPath: ""
+    persistentVolume:
+      enabled: true
+      size: 1Gi
+
+  # pod resource management
+  resources:
+    cpu:
+      cores: 1
+    memory:
+      # Enables memory locking.
+      enable_memory_locking: true
+      container:
+        max: 2Gi
+
+  # SubChart: console
+  console:
+    # name
+    fullnameOverride: "redpanda-console"
+
+    # image
+    image:
+      registry: docker.io
+      repository: redpandadata/console
+      tag: v2.2.3
+
+    # ingress
+    ingress:
+      enabled: false
+      annotations: { }
+      hosts:
+        - host: redpanda.cluster.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+
+    # resources
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# SubChart: qdrant
+qdrant:
+  enabled: true
+
+  # name
+  fullnameOverride: "qdrant"
+
+  # image
+  replicaCount: 1
+  image:
+    repository: qdrant/qdrant
+    tag: v1.1.0
+
+  persistence:
+    size: 5Gi

@@ -20,6 +20,7 @@ include(
     ":qube-faq",
     ":qube-moderation",
     ":qube-audit",
+    ":qube-sourcecode",
 
     // all in one
 	":bot",

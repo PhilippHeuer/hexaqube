@@ -1,6 +1,6 @@
 plugins {
-	kotlin("jvm") version "1.8.10"
-	kotlin("plugin.allopen") version "1.8.10"
+	kotlin("jvm") version "1.8.20"
+	kotlin("plugin.allopen") version "1.8.20"
     id("io.quarkus") apply(false)
 }
 
@@ -14,12 +14,30 @@ allprojects {
 
 	dependencies {
 		// BOM
-		implementation(enforcedPlatform("io.quarkus.platform:quarkus-bom:2.16.4.Final"))
+		implementation(enforcedPlatform("io.quarkus.platform:quarkus-bom:2.16.5.Final"))
 
         constraints {
             // logging
-            implementation("io.github.oshai:kotlin-logging-jvm:4.0.0-beta-23")
-            implementation("org.jboss.slf4j:slf4j-jboss-logmanager:2.0.1.Final")
+            api("io.github.oshai:kotlin-logging-jvm:4.0.0-beta-27")
+            api("org.jboss.slf4j:slf4j-jboss-logmanager:2.0.1.Final")
+
+            // java parser
+            api("com.github.javaparser:javaparser-core:3.25.2")
+            api("com.github.javaparser:javaparser-symbol-solver-core:3.25.2")
+
+            // git
+            api("org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r")
+
+            // semver
+            api("com.vdurmont:semver4j:3.1.0")
+        }
+    }
+
+    configurations {
+        all {
+            resolutionStrategy {
+                force("com.github.javaparser:javaparser-core:3.25.2")
+            }
         }
     }
 
@@ -34,8 +52,13 @@ allprojects {
 	}
 
 	tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-		kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
-		kotlinOptions.javaParameters = true
+        compilerOptions {
+            freeCompilerArgs.set(listOf(
+                "-Xcontext-receivers",
+            ))
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_8)
+        }
 	}
 
     tasks.withType<Test> {

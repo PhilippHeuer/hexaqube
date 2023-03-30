@@ -13,7 +13,8 @@ import java.net.URI
 fun MessageUpdateEvent.convertToQubeMessage(): QubeMessageEvent {
     return message.map { msg ->
         return@map QubeMessageEvent(
-            source = URI.create("/discord/${guildId.get().asString()}"),
+            eventSource = URI.create("/discord/${guildId.get().asString()}"),
+            eventType = "qube.message.update",
             instance = QubeInstance("discord", guildId.get().asString()),
             channel = QubeChannel(
                 id = channelId.asString(),

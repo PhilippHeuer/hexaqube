@@ -4,16 +4,16 @@
 
 ## Architecture
 
-| Component                        | Description                                |
-|----------------------------------|--------------------------------------------|
-| `framework`                      | quarkus                                    |
-| `message queue`                  | redpanda or kafka                          |
-| `message format`                 | application/json                           |
-| `message envelope`               | https://cloudevents.io/                    |
-| `database`                       | postgres                                   |
-| `vector database for embeddings` | qdrant                                     |
-| `reactive`                       | smallrye reactive for messaging / database |
-| `metrics`                        | micrometer / prometheus                    |
+| Component             | Description                             |
+|-----------------------|-----------------------------------------|
+| `framework`           | [quarkus](https://quarkus.io/)          |
+| `message queue`       | [redpanda](https://redpanda.com/)       |
+| `message format`      | application/json                        |
+| `message envelope`    | https://cloudevents.io/                 |
+| `distributed locking` | [etcd](https://etcd.io/)                |
+| `database`            | [postgres](https://www.postgresql.org/) |
+| `vector database`     | [qdrant](https://qdrant.tech/)          |
+| `metrics`             | micrometer / prometheus                 |
 
 All components (platform and qube modules) *MUST* communicate using messages to allow each component to run standalone.
 
@@ -43,7 +43,7 @@ Typically, a feature module will consume a message by the platform and produce a
 
 ## Deployment
 
-HexaQube can be deployed using the provided helm chart in `chart/qube`.
+*HexaQube* can be deployed on kubernetes using the provided helm chart in `chart/qube`.
 
 ## Contributing
 

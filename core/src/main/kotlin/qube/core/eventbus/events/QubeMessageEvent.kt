@@ -15,8 +15,10 @@ import java.net.URI
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class QubeMessageEvent(
-    @JsonProperty("source")
-    override val source: URI,
+    @JsonProperty("event_source")
+    override val eventSource: URI,
+    @JsonProperty("event_type")
+    override val eventType: String,
     @JsonProperty("instance")
     val instance: QubeInstance,
     @JsonProperty("channel")

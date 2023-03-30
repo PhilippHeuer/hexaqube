@@ -12,7 +12,8 @@ import java.net.URI
 
 fun MessageCreateEvent.convertToQubeMessage(): QubeMessageEvent {
     return QubeMessageEvent(
-        source = URI.create("/discord/${guildId.get().asString()}"),
+        eventSource = URI.create("/discord/${guildId.get().asString()}"),
+        eventType = "qube.message.create",
         instance = QubeInstance("discord", guildId.get().asString()),
         channel = QubeChannel(id = message.channelId.asString(), name = null),
         user = QubeUser(

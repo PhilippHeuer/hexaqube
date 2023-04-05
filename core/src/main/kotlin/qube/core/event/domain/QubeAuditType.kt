@@ -1,0 +1,18 @@
+package qube.core.event.domain
+
+enum class QubeAuditType {
+    INSTANCE_CONNECT,
+    INSTANCE_DISCONNECT,
+    MEMBER_JOIN,
+    MEMBER_LEAVE,
+    MEMBER_TIMEOUT,
+    MEMBER_KICK,
+    MEMBER_BAN,
+    MEMBER_BAN_REVOKE,
+    VOICE_JOIN,
+    VOICE_LEAVE,
+    MESSAGE_CREATE,
+    MESSAGE_UPDATE,
+    MESSAGE_DELETE,
+    UNKNOWN,
+}

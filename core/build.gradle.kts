@@ -9,6 +9,7 @@ dependencies {
     api("io.quarkus:quarkus-arc")
     api("io.quarkus:quarkus-smallrye-fault-tolerance")
     api("io.quarkus:quarkus-scheduler")
+    api("io.quarkus:quarkus-cache")
     testImplementation("io.quarkus:quarkus-junit5")
 
     // database
@@ -20,11 +21,11 @@ dependencies {
     api("com.vladmihalcea:hibernate-types-60:2.21.1")
 
     // jackson
-    api("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
-    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
+    api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
     // reactive messaging
-    api("io.cloudevents:cloudevents-kafka:2.4.2")
+    api("io.cloudevents:cloudevents-kafka")
     api("io.quarkus:quarkus-smallrye-reactive-messaging")
     api("io.quarkus:quarkus-smallrye-reactive-messaging-kafka")
 
@@ -34,8 +35,8 @@ dependencies {
     api("io.quarkus:quarkus-smallrye-openapi")
 
     // distributed locking
-    api("net.javacrumbs.shedlock:shedlock-provider-etcd-jetcd:5.2.0")
-    api("net.javacrumbs.shedlock:shedlock-provider-inmemory:5.2.0")
+    api("net.javacrumbs.shedlock:shedlock-provider-etcd-jetcd")
+    api("net.javacrumbs.shedlock:shedlock-provider-inmemory")
 
     // logging
     api("io.github.oshai:kotlin-logging-jvm")
@@ -47,4 +48,7 @@ dependencies {
 
     // okhttp3
     api("com.squareup.okhttp3:okhttp:4.10.0")
+
+    // template engine
+    api("com.github.jknack:handlebars")
 }

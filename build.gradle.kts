@@ -14,7 +14,11 @@ allprojects {
 
 	dependencies {
 		// BOM
-		implementation(enforcedPlatform("io.quarkus.platform:quarkus-bom:3.0.0.CR1"))
+		implementation(enforcedPlatform("io.quarkus.platform:quarkus-bom:3.0.0.CR2"))
+        implementation(enforcedPlatform("net.javacrumbs.shedlock:shedlock-bom:5.2.0"))
+        implementation(enforcedPlatform("io.micrometer:micrometer-bom:1.10.5"))
+        implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.14.2"))
+        implementation(enforcedPlatform("io.cloudevents:cloudevents-bom:2.4.2"))
 
         constraints {
             // logging
@@ -30,6 +34,21 @@ allprojects {
 
             // semver
             api("com.vdurmont:semver4j:3.1.0")
+
+            // metrics
+            api("io.micrometer:micrometer-core:1.10.5")
+
+            // discord4j
+            api("com.discord4j:discord4j-core:3.2.3")
+
+            // template engine
+            api("com.github.jknack:handlebars:4.3.1")
+
+            // html2md
+            api("com.vladsch.flexmark:flexmark-html2md-converter:0.64.0")
+
+            // commons-text
+            api("org.apache.commons:commons-text:1.10.0")
         }
     }
 

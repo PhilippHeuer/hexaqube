@@ -1,42 +1,34 @@
 package qube.faq.subscriber
 
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.cloudevents.core.v1.CloudEventV1
 import io.github.oshai.KotlinLogging
+import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
-import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.reactive.messaging.Incoming
-import qube.core.eventbus.events.QubeMessageEvent
-import qube.core.eventbus.extensions.toLogString
-import qube.core.exception.EventException
-
-private val logger = KotlinLogging.logger {}
-private val mapper = jacksonMapperBuilder().findAndAddModules().build()
+import qube.core.event.events.QubeMessageEvent
+import qube.core.event.extensions.toLogString
+import qube.core.util.QubeObjectMapper
 
 @ApplicationScoped
 class FAQSubscriber {
-    companion object {
-        private const val MESSAGE_FAQ_CHANNEL = "message-faq"
-    }
 
-    @Incoming(MESSAGE_FAQ_CHANNEL)
-    @Retry(delay = 5, maxRetries = 2)
-    fun consume(event: CloudEventV1) {
-        var exceptionThrown = false
-        logger.debug { "event received: ${event.toLogString(MESSAGE_FAQ_CHANNEL)}"}
-        try {
-            val json = String(event.data?.toBytes() ?: ByteArray(0))
-            val payload: QubeMessageEvent = mapper.readValue(json)
-            // TODO: implement the logic to check the faq and respond with the answer
-        } catch (e: Exception) {
-            exceptionThrown = true
-            throw EventException("event processing failed: ${event.toLogString(MESSAGE_FAQ_CHANNEL)}. Error: ${e.message}", e)
-        } finally {
-            if (!exceptionThrown) {
-                logger.info { "event processed successfully: ${event.toLogString(MESSAGE_FAQ_CHANNEL)}"}
+    @Incoming("message-faq")
+    fun consume(cloudEvent: CloudEventV1): Uni<Void> {
+        logger.debug { "event received: ${cloudEvent.toLogString()}"}
+
+        return Uni.createFrom().item(cloudEvent)
+            .map { QubeObjectMapper.json.readValue(it.data?.toBytes() ?: ByteArray(0), QubeMessageEvent::class.java) }
+            .onItem().invoke { event ->
+                // TODO: implement faq
             }
-        }
+            .onItem().ignore().andContinueWithNull()
+            .onFailure().invoke { ex: Throwable ->
+                logger.error(ex) { "event processing failed: ${cloudEvent.toLogString()}. Error: ${ex.message}" }
+            }
+            .onItem().invoke { _ -> logger.info { "event processed successfully: ${cloudEvent.toLogString()}"} }
     }
 
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

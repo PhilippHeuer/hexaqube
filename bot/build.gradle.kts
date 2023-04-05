@@ -14,7 +14,7 @@ dependencies {
     api(project(":qube-faq"))
     api(project(":qube-audit"))
     api(project(":qube-moderation"))
-    api(project(":qube-sourcecode"))
+    api(project(":qube-codesearch"))
     api(project(":platform-discord4j"))
 
     // observability

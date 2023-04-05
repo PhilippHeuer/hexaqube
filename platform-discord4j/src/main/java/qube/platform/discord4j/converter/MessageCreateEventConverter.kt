@@ -2,18 +2,17 @@ package qube.platform.discord4j.converter
 
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.`object`.entity.Message
-import qube.core.eventbus.domain.QubeChannel
-import qube.core.eventbus.domain.QubeInstance
-import qube.core.eventbus.domain.QubeMessage
-import qube.core.eventbus.domain.QubeMessageActionType
-import qube.core.eventbus.domain.QubeUser
-import qube.core.eventbus.events.QubeMessageEvent
+import qube.core.event.domain.QubeChannel
+import qube.core.event.domain.QubeInstance
+import qube.core.event.domain.QubeMessage
+import qube.core.event.domain.QubeMessageActionType
+import qube.core.event.domain.QubeUser
+import qube.core.event.events.QubeMessageEvent
 import java.net.URI
 
 fun MessageCreateEvent.convertToQubeMessage(): QubeMessageEvent {
     return QubeMessageEvent(
         eventSource = URI.create("/discord/${guildId.get().asString()}"),
-        eventType = "qube.message.create",
         instance = QubeInstance("discord", guildId.get().asString()),
         channel = QubeChannel(id = message.channelId.asString(), name = null),
         user = QubeUser(

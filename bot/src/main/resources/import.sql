@@ -1,3 +1,49 @@
+/* default templates */
+INSERT INTO template (id, template_id, instance_type, instance_id, title, content, footer)
+VALUES (
+	'83dca784-b379-4611-8285-111c2b99ecfa',
+   'command.response.codesearch.ok',
+   null,
+   null,
+   'CodeSearch - {{{ result.name }}}',
+'{{{ result.description }}}
+
+{{#if result.first_seen_in.length~}}
+> added in: {{{ result.first_seen_in }}}
+{{/if~}}
+```{{ result.language }}
+
+{{{ result.definition }}}
+```
+
+{{#if result.data.parameters.length~}}
+**Parameters:**
+{{#each result.data.parameters~}}
+- **{{{name}}}**: {{{description}}}
+{{/each~}}
+{{/if}}
+{{#if notes.length~}}
+**Notes:** :warning:
+{{#each notes~}}
+- {{{ . }}}
+{{/each~}}
+{{/if}}
+**Source Reference**:
+[{{{ result.source_file }}}#L{{ result.source_line }}-L{{ result.source_line_end }}]({{{ result.source_link }}})
+',
+	'Filtered from {{{ result_count }}} results.'
+);
+INSERT INTO template (id, template_id, instance_type, instance_id, title, content, footer)
+VALUES (
+	'96c48501-5e10-4615-8d6d-f495efda40fd',
+	'command.response.codesearch.err',
+	null,
+	null,
+	'CodeSearch - No results',
+	'No results found for `{{{ query }}}`',
+	null
+);
+
 /* qube: sourcecode */
 INSERT INTO sourceindex_project (id, key, display_name, description, repository_kind, repository_remote, repository_commit_hash, repository_tag, type, created_at, updated_at)
 VALUES (

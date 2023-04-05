@@ -12,8 +12,8 @@ dependencies {
 	api(project(":core"))
 
 	// micrometer
-	api("io.micrometer:micrometer-core:1.10.5")
+	api("io.micrometer:micrometer-core")
 
 	// discord4j
-	api("com.discord4j:discord4j-core:3.2.3")
+	api("com.discord4j:discord4j-core")
 }

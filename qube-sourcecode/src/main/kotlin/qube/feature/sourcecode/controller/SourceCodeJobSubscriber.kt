@@ -17,6 +17,7 @@ import qube.core.storage.sourcecode.domain.SourceCodeReferenceType
 import qube.core.storage.sourcecode.jpa.SourceIndexProjectEntity
 import qube.core.storage.sourcecode.jpa.SourceIndexReferenceEntity
 import qube.feature.sourcecode.domain.SourceCodeSymbol
+import qube.feature.sourcecode.domain.SourceCodeSymbolFlag
 import qube.feature.sourcecode.events.SourceCodeScanEvent
 import qube.feature.sourcecode.parser.JavaProjectIndexer
 import qube.feature.sourcecode.parser.ProjectIndexer
@@ -83,10 +84,11 @@ class SourceCodeJobSubscriber {
 
                     // save all references
                     SourceIndexReferenceEntity.persist(refs)
-                    logger.info { "persisted ${refs.size} symbols into the database for project: ${payload.project.id}" }
-
-                    refs.forEach {
-                        logger.info { "persisted symbol: ${it.toString()}" }
+                    logger.info {
+                        val deprecated = refs.count { (it.flags and SourceCodeSymbolFlag.DEPRECATED.value) == SourceCodeSymbolFlag.DEPRECATED.value }
+                        val internal = refs.count { (it.flags and SourceCodeSymbolFlag.INTERNAL.value) == SourceCodeSymbolFlag.INTERNAL.value }
+                        val experimental = refs.count { (it.flags and SourceCodeSymbolFlag.EXPERIMENTAL.value) == SourceCodeSymbolFlag.EXPERIMENTAL.value }
+                        "persisted ${refs.size} symbols [EXPERIMENTAL: $experimental, DEPRECATED: $deprecated, INTERNAL: $internal] into the database for project: ${payload.project.id}"
                     }
                 }
         } catch (e: Exception) {

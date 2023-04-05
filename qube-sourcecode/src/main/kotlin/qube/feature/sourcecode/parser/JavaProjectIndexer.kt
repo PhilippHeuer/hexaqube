@@ -60,7 +60,7 @@ class JavaProjectIndexer(
                 val fullClassName = clazz.fullyQualifiedName.orElse(clazz.nameAsString)
                 val namespace = fullClassName.substring(0, fullClassName.lastIndexOf("."))
                 val className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
-                logger.debug { "processing class: ${namespace}.${className}" }
+                logger.trace { "processing class: ${namespace}.${className}" }
 
                 symbols.add(SourceCodeSymbol(
                     selector = "${namespace}.${className}",
@@ -82,7 +82,7 @@ class JavaProjectIndexer(
             }
             allMethods.forEach { method ->
                 val parentObjectName = method.parentObjectName()
-                logger.debug { "processing method: ${parentObjectName}.${method.nameAsString}" }
+                logger.trace { "processing method: ${parentObjectName}.${method.nameAsString}" }
 
                 // ignore methods that are part of an object creation expression
                 if (method.parentNode.orElse(null) is ObjectCreationExpr) {

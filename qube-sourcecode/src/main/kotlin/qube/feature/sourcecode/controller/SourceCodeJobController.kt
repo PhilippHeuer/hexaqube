@@ -6,6 +6,7 @@ import io.github.oshai.KotlinLogging
 import io.quarkus.scheduler.Scheduled
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.enterprise.context.control.ActivateRequestContext
+import jakarta.transaction.Transactional
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.eclipse.microprofile.reactive.messaging.OnOverflow
@@ -28,7 +29,7 @@ class SourceCodeJobController(
 ) {
 
     @Scheduled(delay = 5, delayUnit = TimeUnit.SECONDS, every = "1m")
-    @ActivateRequestContext
+    @Transactional
     fun scheduleProjectUpdate() {
         val lock = lockService.getLock("job-indexproject-dispatch", Duration.ofSeconds(30), Duration.ofMinutes(5)).orElse(null) ?: return
 
@@ -48,7 +49,7 @@ class SourceCodeJobController(
         }
     }
 
-    fun processGITProject(project: SourceIndexProjectEntity) {
+    private fun processGITProject(project: SourceIndexProjectEntity) {
         val refs = RepositoryUtils.getRepositoryReferences(project.repositoryRemote).stream()
             .filter { RepositoryUtils.isStableRepositoryReference(it.name) }
             .sorted { o1, o2 ->

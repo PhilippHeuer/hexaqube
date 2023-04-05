@@ -1,10 +1,10 @@
 package qube.platform.discord4j.health
 
+import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.health.HealthCheck
 import org.eclipse.microprofile.health.HealthCheckResponse
 import org.eclipse.microprofile.health.Liveness
 import qube.platform.discord4j.Discord4JPlatform
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 @Liveness

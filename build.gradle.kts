@@ -14,7 +14,7 @@ allprojects {
 
 	dependencies {
 		// BOM
-		implementation(enforcedPlatform("io.quarkus.platform:quarkus-bom:2.16.5.Final"))
+		implementation(enforcedPlatform("io.quarkus.platform:quarkus-bom:3.0.0.CR1"))
 
         constraints {
             // logging

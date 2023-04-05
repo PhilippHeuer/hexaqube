@@ -14,14 +14,15 @@ import discord4j.gateway.intent.IntentSet
 import io.github.oshai.KotlinLogging
 import io.micrometer.core.annotation.Counted
 import io.quarkus.runtime.Startup
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
+import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import qube.core.eventbus.QubeEventBus
 import qube.platform.discord4j.converter.convertToQubeMessage
 import reactor.util.retry.Retry
 import java.time.Duration
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
-import javax.enterprise.context.ApplicationScoped
+
 
 private val logger = KotlinLogging.logger {}
 

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.cloudevents.core.v1.CloudEventV1
 import io.github.oshai.KotlinLogging
+import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.reactive.messaging.Incoming
 import qube.core.eventbus.events.QubeMessageEvent
 import qube.core.eventbus.extensions.toLogString
 import qube.core.exception.EventException
-import javax.enterprise.context.ApplicationScoped
 
 private val logger = KotlinLogging.logger {}
 private val mapper = jacksonMapperBuilder().findAndAddModules().build()

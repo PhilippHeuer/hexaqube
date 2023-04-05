@@ -1,10 +1,10 @@
 package qube.core.eventbus
 
 import io.cloudevents.CloudEvent
+import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.reactive.messaging.*
 import qube.core.eventbus.domain.QubeMessageActionType
 import qube.core.eventbus.events.QubeMessageEvent
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class QubeEventBus(

@@ -4,6 +4,8 @@ import com.vdurmont.semver4j.Semver
 import io.cloudevents.CloudEvent
 import io.github.oshai.KotlinLogging
 import io.quarkus.scheduler.Scheduled
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.control.ActivateRequestContext
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.eclipse.microprofile.reactive.messaging.OnOverflow
@@ -13,8 +15,6 @@ import qube.feature.sourcecode.events.SourceCodeScanEvent
 import qube.feature.sourcecode.util.RepositoryUtils
 import java.time.Duration
 import java.util.concurrent.TimeUnit
-import javax.enterprise.context.ApplicationScoped
-import javax.enterprise.context.control.ActivateRequestContext
 
 private val logger = KotlinLogging.logger {}
 

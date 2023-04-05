@@ -1,6 +1,7 @@
 package qube.core.service
 
 import io.etcd.jetcd.Client
+import jakarta.enterprise.context.ApplicationScoped
 import net.javacrumbs.shedlock.core.LockConfiguration
 import net.javacrumbs.shedlock.core.LockProvider
 import net.javacrumbs.shedlock.core.SimpleLock
@@ -10,7 +11,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional
-import javax.enterprise.context.ApplicationScoped
 
 /**
  * Service for handling distributed locks

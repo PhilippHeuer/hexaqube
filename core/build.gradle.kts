@@ -17,6 +17,7 @@ dependencies {
     //api("io.quarkus:quarkus-hibernate-reactive")
     //api("io.quarkus:quarkus-hibernate-reactive-panache-kotlin")
     //api("io.quarkus:quarkus-reactive-pg-client")
+    api("com.vladmihalcea:hibernate-types-60:2.21.1")
 
     // jackson
     api("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")

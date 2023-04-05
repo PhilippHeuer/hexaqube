@@ -2,21 +2,22 @@ package qube.core.storage.sourcecode.jpa
 
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheCompanion
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import org.hibernate.annotations.GenericGenerator
-import org.hibernate.annotations.Type
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import qube.core.storage.sourcecode.domain.SourceCodeReferenceType
 import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 
-@Entity(name = "SOURCEINDEX_REFERENCE")
+@Entity(name = "sourceindex_reference")
 data class SourceIndexReferenceEntity(
     @Id
     @GeneratedValue(generator = "UUID")
@@ -63,6 +64,7 @@ data class SourceIndexReferenceEntity(
     var definition: String? = null,
 
     @Column(name = "DATA", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
     var data: Map<String, Any>? = null
 ) : PanacheEntityBase {
 

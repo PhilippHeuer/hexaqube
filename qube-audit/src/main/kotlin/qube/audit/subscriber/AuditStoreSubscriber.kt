@@ -4,6 +4,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.cloudevents.core.v1.CloudEventV1
 import io.github.oshai.KotlinLogging
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.control.ActivateRequestContext
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.reactive.messaging.Incoming
 import qube.core.eventbus.domain.QubeAuditType
@@ -12,8 +14,6 @@ import qube.core.eventbus.events.QubeMessageEvent
 import qube.core.eventbus.extensions.toLogString
 import qube.core.exception.EventException
 import qube.core.storage.audit.jpa.AuditEntity
-import javax.enterprise.context.ApplicationScoped
-import javax.enterprise.context.control.ActivateRequestContext
 
 private val logger = KotlinLogging.logger {}
 private val mapper = jacksonObjectMapper()

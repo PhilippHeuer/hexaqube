@@ -6,8 +6,8 @@ import io.cloudevents.core.v1.CloudEventV1
 import io.github.oshai.KotlinLogging
 import io.smallrye.common.annotation.Blocking
 import io.smallrye.mutiny.Multi
-import io.smallrye.mutiny.Uni
-import io.smallrye.mutiny.infrastructure.Infrastructure
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.transaction.Transactional
 import org.eclipse.jgit.api.Git
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.reactive.messaging.Incoming
@@ -22,8 +22,6 @@ import qube.feature.sourcecode.parser.JavaProjectIndexer
 import qube.feature.sourcecode.parser.ProjectIndexer
 import java.io.File
 import java.nio.file.Files
-import javax.enterprise.context.ApplicationScoped
-import javax.transaction.Transactional
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.PathWalkOption
 import kotlin.io.path.absolutePathString

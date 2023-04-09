@@ -5,6 +5,7 @@ import io.quarkus.runtime.Startup
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.enterprise.inject.Instance
 import org.eclipse.microprofile.config.ConfigProvider
+import qube.core.command.domain.QubeCommand
 
 @Startup
 @ApplicationScoped

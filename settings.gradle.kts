@@ -17,10 +17,10 @@ include(
 	":platform-discord4j",
 
 	// qubes (features)
-    ":qube-faq",
     ":qube-moderation",
     ":qube-audit",
     ":qube-codesearch",
+    ":qube-docsearch",
 
     // all in one
 	":bot",

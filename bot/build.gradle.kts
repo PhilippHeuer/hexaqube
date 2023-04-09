@@ -9,12 +9,13 @@ dependencies {
 	implementation("io.quarkus:quarkus-arc")
     testImplementation("io.quarkus:quarkus-junit5")
 
-    // module
-    api(project(":core"))
-    api(project(":qube-faq"))
+    // features
     api(project(":qube-audit"))
     api(project(":qube-moderation"))
     api(project(":qube-codesearch"))
+    api(project(":qube-docsearch"))
+
+    // platform
     api(project(":platform-discord4j"))
 
     // observability

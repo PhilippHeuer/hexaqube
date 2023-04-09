@@ -28,6 +28,7 @@ class TopicManager(
 
         // commands
         createTopic("qube.command.execute.codesearch")
+        createTopic("qube.command.execute.docsearch")
 
         // platform actions
         createTopic("qube.discord.command.response")

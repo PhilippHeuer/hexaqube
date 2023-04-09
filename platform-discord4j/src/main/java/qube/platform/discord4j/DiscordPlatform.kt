@@ -24,7 +24,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.eclipse.microprofile.reactive.messaging.OnOverflow
-import qube.core.config.TopicManager
 import qube.platform.discord4j.converter.convertToQubeCommand
 import qube.platform.discord4j.converter.convertToQubeMessage
 import qube.platform.discord4j.features.DiscordCommandRegistry
@@ -50,7 +49,6 @@ class DiscordPlatform(
     private var commandEmitter: Emitter<CloudEvent>,
 
     private var commandRegistry: DiscordCommandRegistry,
-    private var topicManager: TopicManager,
 
     @ConfigProperty(name = "platform.discord4j.token")
     private val token: String,
@@ -118,9 +116,9 @@ class DiscordPlatform(
     fun destroy() {
         logger.info { "[discord4j] disconnecting ..." }
 
-        // cancel commands
+        // cancel command replies
         commandCache.forEach {
-            it.value.deleteReply().block(Duration.ofMillis(1000))
+            it.value.deleteReply().block(Duration.ofMillis(100))
         }
 
         // disconnect

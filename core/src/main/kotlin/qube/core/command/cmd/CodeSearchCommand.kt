@@ -1,9 +1,10 @@
 package qube.core.command.cmd
 
 import jakarta.enterprise.context.ApplicationScoped
-import qube.core.command.QubeCommand
-import qube.core.command.QubeCommandFlags
-import qube.core.command.QubeCommandParameter
+import qube.core.command.domain.QubeCommand
+import qube.core.command.domain.QubeCommandFlags
+import qube.core.command.domain.QubeCommandOption
+import qube.core.command.domain.QubeCommandParameter
 
 @ApplicationScoped
 class CodeSearchCommand: QubeCommand {
@@ -30,11 +31,24 @@ class CodeSearchCommand: QubeCommand {
                 required = true,
             ),
             QubeCommandParameter(
-                name = "version",
-                description = "method needs to be present in version",
+                name = "annotations",
+                description = "filter by annotations",
                 type = String::class.java,
                 default = null,
-                options = emptyList(),
+                options = listOf(
+                    QubeCommandOption(
+                        name = "deprecated",
+                        description = "search for deprecated methods",
+                    ),
+                    QubeCommandOption(
+                        name = "internal",
+                        description = "search for internal methods",
+                    ),
+                    QubeCommandOption(
+                        name = "experimental",
+                        description = "search for experimental methods",
+                    ),
+                ),
                 required = false,
             )
         )

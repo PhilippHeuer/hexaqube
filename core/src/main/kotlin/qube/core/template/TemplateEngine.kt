@@ -14,19 +14,20 @@ class TemplateEngine {
     fun render(templateId: String, instance: QubeInstance, data: Map<String, Any>): TemplateRenderResult {
         val template = getTemplate(templateId, instance)
 
-        val titleTemplate = handlebars.compileInline(template.title)
-        val contentTemplate = handlebars.compileInline(template.content)
-        val footerTemplate = handlebars.compileInline(template.footer)
-
         return TemplateRenderResult(
-            title = titleTemplate.apply(data),
-            content = contentTemplate.apply(data),
-            footer = footerTemplate.apply(data),
+            title = template.title?.let { processTemplate(it, data) },
+            content = template.content?.let { processTemplate(it, data) } ?: "",
+            footer = template.footer?.let { processTemplate(it, data) },
         )
     }
 
     @CacheResult(cacheName = "template-cache")
     fun getTemplate(templateId: String, instance: QubeInstance): TemplateEntity {
         return TemplateEntity.findByTemplateIdAndInstance(templateId, instance).firstOrNull() ?: TemplateEntity.findByTemplateId(templateId).first()
+    }
+
+    private fun processTemplate(template: String, data: Map<String, Any>): String {
+        val tpl = handlebars.compileInline(template)
+        return tpl.apply(data)
     }
 }

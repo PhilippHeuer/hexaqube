@@ -36,16 +36,18 @@ class DiscordCommandResponder(
 
                 // send response (embed or plain text based on the template)
                 val interaction = platform.commandCache.remove(event.command.commandId)
-                if (output.title.isNotBlank()) {
+                if (output.title != null) {
+                    val embedSpec = EmbedCreateSpec.builder()
+                        .color(if (event.templateId.endsWith(".err")) Color.RED else Color.CYAN)
+                        .title(output.title ?: "")
+                        .description(output.content)
+                        .footer(output.footer?.let { EmbedCreateFields.Footer.of(it, null) })
+                        .build()
+
                     interaction?.editReply(
                         InteractionReplyEditSpec.builder()
                             .build()
-                            .withEmbeds(EmbedCreateSpec.create()
-                                .withColor(Color.CYAN)
-                                .withTitle(output.title)
-                                .withDescription(output.content)
-                                .withFooter(EmbedCreateFields.Footer.of(output.footer, null))
-                            )
+                            .withEmbeds(embedSpec)
                     )?.subscribe()
                 } else {
                     interaction?.editReply(

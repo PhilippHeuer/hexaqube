@@ -17,7 +17,6 @@ import qube.codefinder.extension.getJavadocDescription
 import qube.codefinder.extension.getJavadocSince
 import qube.codefinder.extension.parentObjectName
 import qube.codefinder.parser.domain.SourceCodeSymbol
-import qube.codefinder.parser.domain.SourceCodeSymbolFlag
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
@@ -73,7 +72,7 @@ class JavaProjectIndexer(
                         lineEnd = clazz.end.get().line,
                         length = clazz.end.get().line - clazz.begin.get().line,
                         addedIn = clazz.getApiStatusAvailableSince().orElse(clazz.getJavadocSince().orElse(null)),
-                        flags = SourceCodeSymbolFlag.ofSet(clazz.getFlags()),
+                        flags = clazz.getFlags(),
                         properties = mapOf(
                             "namespace" to namespace,
                         ),
@@ -128,7 +127,7 @@ class JavaProjectIndexer(
                             "return_type" to method.type.asString(),
                             "parameters" to parameters,
                         ),
-                        flags = SourceCodeSymbolFlag.ofSet(method.getFlags()),
+                        flags = method.getFlags(),
                         definition = method.getDeclaration(),
                     )
                 )

@@ -13,7 +13,7 @@ data class SourceCodeSymbol(
     val length: Int,
     var addedIn: String? = null,
     var removedIn: String? = null,
-    val flags: Int,
+    val flags: Set<SourceCodeSymbolFlag> = emptySet(),
     val properties: Map<String, Any> = emptyMap(),
     val definition: String,
 )

@@ -30,6 +30,13 @@ VALUES (
 {{/if}}
 **Source Reference**:
 [{{{ result.source_file }}}#L{{ result.source_line }}-L{{ result.source_line_end }}]({{{ result.source_link }}})
+
+{{#if similar.length~}}
+**Did you mean?**
+{{#each similar~}}
+- {{{ name }}}
+{{/each~}}
+{{/if}}
 ',
 	'Filtered from {{{ result_count }}} results.'
 );

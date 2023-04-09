@@ -9,7 +9,7 @@ import kotlin.String
 import kotlin.apply
 
 fun NodeWithAnnotations<*>.getFlags(): Set<SourceCodeSymbolFlag> {
-    return mutableSetOf(SourceCodeSymbolFlag.DEFAULT).apply {
+    return mutableSetOf<SourceCodeSymbolFlag>().apply {
         if (isAnnotationPresent(Deprecated::class.java) || isAnnotationPresent(kotlin.Deprecated::class.java) || isAnnotationPresent(ApiStatus.ScheduledForRemoval::class.java) || isAnnotationPresent(ApiStatus.Obsolete::class.java)) {
             add(SourceCodeSymbolFlag.DEPRECATED)
         }

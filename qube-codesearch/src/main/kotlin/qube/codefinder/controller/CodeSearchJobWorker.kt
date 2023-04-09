@@ -49,7 +49,7 @@ class CodeSearchJobWorker(
                     if (symbol.addedIn != null) {
                         ref.firstSeenIn = symbol.addedIn
                     }
-                    ref.flags = symbol.flags
+                    ref.flags = symbol.flags.map { it.name }.toList()
                     ref.definition = symbol.definition
                     ref.data = symbol.properties
 
@@ -73,10 +73,10 @@ class CodeSearchJobWorker(
                     // save all references
                     SourceIndexReferenceEntity.persist(refs)
                     logger.debug {
-                        val deprecated = refs.count { (it.flags and SourceCodeSymbolFlag.DEPRECATED.value) == SourceCodeSymbolFlag.DEPRECATED.value }
-                        val internal = refs.count { (it.flags and SourceCodeSymbolFlag.INTERNAL.value) == SourceCodeSymbolFlag.INTERNAL.value }
-                        val experimental = refs.count { (it.flags and SourceCodeSymbolFlag.EXPERIMENTAL.value) == SourceCodeSymbolFlag.EXPERIMENTAL.value }
-                        val unofficial = refs.count { (it.flags and SourceCodeSymbolFlag.UNOFFICIAL.value) == SourceCodeSymbolFlag.UNOFFICIAL.value }
+                        val deprecated = refs.count { it.flags.contains(SourceCodeSymbolFlag.DEPRECATED.name) }
+                        val internal = refs.count { it.flags.contains(SourceCodeSymbolFlag.INTERNAL.name) }
+                        val experimental = refs.count { it.flags.contains(SourceCodeSymbolFlag.EXPERIMENTAL.name) }
+                        val unofficial = refs.count { it.flags.contains(SourceCodeSymbolFlag.UNOFFICIAL.name) }
                         "persisted ${refs.size} symbols [EXPERIMENTAL: $experimental, DEPRECATED: $deprecated, INTERNAL: $internal, UNOFFICIAL: $unofficial] into the database for project: ${payload.project.id}"
                     }
                 }

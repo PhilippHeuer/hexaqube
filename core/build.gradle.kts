@@ -14,6 +14,7 @@ dependencies {
 
     // database
     api("io.quarkus:quarkus-hibernate-orm-panache-kotlin")
+    api("io.quarkus:quarkus-hibernate-search-orm-elasticsearch")
     api("io.quarkus:quarkus-jdbc-postgresql")
     //api("io.quarkus:quarkus-hibernate-reactive")
     //api("io.quarkus:quarkus-hibernate-reactive-panache-kotlin")

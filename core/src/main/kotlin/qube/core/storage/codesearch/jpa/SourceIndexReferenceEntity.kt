@@ -3,6 +3,7 @@ package qube.core.storage.codesearch.jpa
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheCompanion
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.Column
+import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -13,11 +14,15 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField
 import org.hibernate.type.SqlTypes
 import qube.core.storage.codesearch.domain.SourceCodeReferenceType
 import java.util.UUID
 
 @Entity(name = "sourceindex_reference")
+@Indexed
 data class SourceIndexReferenceEntity(
     @Id
     @GeneratedValue(generator = "UUID")
@@ -37,15 +42,18 @@ data class SourceIndexReferenceEntity(
     var type: SourceCodeReferenceType? = null,
 
     @Column(name = "SELECTOR", length = 600)
+    @FullTextField(analyzer = "pattern_selector")
     var selector: String? = null,
 
     @Column(name = "NAMESPACE", length = 500)
     var namespace: String? = null,
 
     @Column(name = "NAME", length = 300)
+    @FullTextField(analyzer = "pattern_selector")
     var name: String? = null,
 
     @Column(name = "DESCRIPTION", length = 3000)
+    @FullTextField(analyzer = "text")
     var description: String? = null,
 
     @Column(name = "SOURCE_FILE", length = 150)
@@ -67,7 +75,9 @@ data class SourceIndexReferenceEntity(
     var lastSeenIn: String? = null,
 
     @Column(name = "FLAGS")
-    var flags: Int = 0,
+    @ElementCollection
+    @FullTextField(analyzer = "text")
+    var flags: List<String> = emptyList(),
 
     @Column(name = "DEFINITION", length = 1000)
     var definition: String? = null,
@@ -75,18 +85,10 @@ data class SourceIndexReferenceEntity(
     @Column(name = "DATA", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
     var data: Map<String, Any>? = null,
-
-    @Transient
-    var score: Double = 0.0
 ) : PanacheEntityBase {
-
     companion object : PanacheCompanion<SourceIndexReferenceEntity> {
         fun findByProject(project: SourceIndexProjectEntity): List<SourceIndexReferenceEntity> {
             return find("project", project).list()
-        }
-
-        fun findBySelector(selector: String): List<SourceIndexReferenceEntity> {
-            return find("selector LIKE ?1", "%${selector}%").list()
         }
     }
 }

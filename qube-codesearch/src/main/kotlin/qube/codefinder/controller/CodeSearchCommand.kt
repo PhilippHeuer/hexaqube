@@ -11,24 +11,27 @@ import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.eclipse.microprofile.reactive.messaging.Incoming
 import org.eclipse.microprofile.reactive.messaging.OnOverflow
+import org.hibernate.search.engine.search.query.SearchResult
+import org.hibernate.search.mapper.orm.session.SearchSession
+import qube.codefinder.parser.domain.SourceCodeSymbolFlag
 import qube.core.event.events.QubeCommandEvent
 import qube.core.event.events.QubeCommandResponseEvent
 import qube.core.event.extensions.toLogString
 import qube.core.storage.codesearch.jpa.SourceIndexReferenceEntity
 import qube.core.util.QubeObjectMapper
-import qube.codefinder.parser.domain.SourceCodeSymbolFlag
 
 @ApplicationScoped
 class CodeSearchCommand(
     @Channel("publish-command-response")
     @OnOverflow(value = OnOverflow.Strategy.BUFFER, bufferSize = 500)
     private var emitter: Emitter<CloudEvent>,
+    private val searchSession: SearchSession,
 ) {
     private val flagNotes = mapOf(
-        SourceCodeSymbolFlag.DEPRECATED to "This method is deprecated and will be removed in a future release.",
-        SourceCodeSymbolFlag.INTERNAL to "This method is internal and not intended for use outside of the library.",
-        SourceCodeSymbolFlag.EXPERIMENTAL to "This method is experimental and subject to change in future releases.",
-        SourceCodeSymbolFlag.UNOFFICIAL to "This method is not part of the official API and using it may be against the terms of service. Use at your own risk."
+        SourceCodeSymbolFlag.DEPRECATED.name to "This method is deprecated and will be removed in a future release.",
+        SourceCodeSymbolFlag.INTERNAL.name to "This method is internal and not intended for use outside of the library.",
+        SourceCodeSymbolFlag.EXPERIMENTAL.name to "This method is experimental and subject to change in future releases.",
+        SourceCodeSymbolFlag.UNOFFICIAL.name to "This method is not part of the official API and using it may be against the terms of service. Use at your own risk."
     )
 
     @Incoming("command-execute-codesearch")
@@ -42,19 +45,56 @@ class CodeSearchCommand(
             .onItem().invoke { event ->
                 val selector: String = event.parameters["query"]!!
 
-                // find matches
-                val matches = SourceIndexReferenceEntity.findBySelector(selector)
+                // search
+                val result = searchSession.search(SourceIndexReferenceEntity::class.java).where { q ->
+                    q.bool { b ->
+                        // matching
+                        b.should { f ->
+                            f.match()
+                                .fields("name")
+                                .matching(selector)
+                                .boost(3f)
+                        }
+                        b.should { f ->
+                            f.match()
+                                .fields("selector")
+                                .matching(selector)
+                                .boost(2f)
+                                .fuzzy(1)
+                        }
 
-                // score matches and pick the best one
-                matches.map {
-                    it.score = 0.0
-                }
+                        // ranking
+                        b.should { f ->
+                            f.match()
+                                .fields("flags")
+                                .matching("DEPRECATED")
+                                .boost(0.5f)
+                        }
+                        b.should { f ->
+                            f.match()
+                                .fields("flags")
+                                .matching("INTERNAL")
+                                .boost(0.4f)
+                        }
+                        b.should { f ->
+                            f.match()
+                                .fields("flags")
+                                .matching("EXPERIMENTAL")
+                                .boost(0.7f)
+                        }
+                        b.should { f ->
+                            f.match()
+                                .fields("flags")
+                                .matching("UNOFFICIAL")
+                                .boost(0.9f)
+                        }
+                    }
+                }.fetch(6) as SearchResult<SourceIndexReferenceEntity>
 
                 // send response
-                val match = matches.firstOrNull()
+                val match = result.hits().firstOrNull()
                 if (match != null) {
-                    val flags = SourceCodeSymbolFlag.toSet(matches[0].flags)
-                    val notes = flags.mapNotNull { flag -> flagNotes[flag] }.toMutableList()
+                    val notes = match.flags.mapNotNull { flag -> flagNotes[flag] }.toMutableList()
 
                     val response = QubeCommandResponseEvent(
                         eventSource = cloudEvent.source,
@@ -63,7 +103,8 @@ class CodeSearchCommand(
                         templateId = "command.response.codesearch.ok",
                         templateData = mapOf(
                             "result" to match,
-                            "result_count" to matches.size,
+                            "result_count" to result.total().hitCount(),
+                            "similar" to if (result.hits().size > 1) result.hits().subList(1, result.hits().size) else emptyList(),
                             "notes" to notes,
                         )
                     )
@@ -73,12 +114,12 @@ class CodeSearchCommand(
                         eventSource = cloudEvent.source,
                         instance = event.instance,
                         command = event,
-                        templateId = "command.response.codesearch.ok",
+                        templateId = "command.response.codesearch.err",
                         templateData = mapOf(
                             "query" to selector,
                         )
                     )
-                    emitter.send(response.toEventMessage(topic = "qube.discord.command.err"))
+                    emitter.send(response.toEventMessage(topic = "qube.discord.command.response"))
                 }
             }
             .onItem().ignore().andContinueWithNull()
